@@ -1,6 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:hotslogs_mobile_client/saved_words.dart';
+import 'package:hotslogs_mobile_client/talent_builds.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,7 +27,13 @@ class RandomWordsState extends State<RandomWords> {
       appBar: AppBar(
         title: Text('Welcome to Flutter'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved)
+          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+          IconButton(icon: Icon(Icons.file_download), onPressed: () {
+            getBuildsForHero("Malthael").then((value) {
+              print("Got a value!");
+              print(value);
+            });
+          }),
         ],
       ),
       body: _buildSuggestions(),

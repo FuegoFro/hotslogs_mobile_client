@@ -1,6 +1,6 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:hotslogs_mobile_client/main.dart';
+import 'package:hotslogs_mobile_client/random_names_list.dart';
 
 class SavedWords extends StatelessWidget {
   SavedWords(this._words);

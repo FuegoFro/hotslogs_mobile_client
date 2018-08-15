@@ -68,6 +68,16 @@ class TalentBuild {
     return 'TalentBuild{gameCount: $gameCount, winPercent: $winPercent, tier1: $tier1, tier2: $tier2, tier3: $tier3, tier4: $tier4, tier5: $tier5, tier6: $tier6}';
   }
 
+  Iterable<Talent> iterTalents() sync* {
+    yield tier1;
+    yield tier2;
+    yield tier3;
+    yield tier4;
+    yield tier5;
+    yield tier6;
+  }
+
+  Iterable<T> mapTalents<T>(T f(Talent t)) => iterTalents().map(f);
 }
 
 class FetchTalentBuildException implements Exception {

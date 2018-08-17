@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' show parse;
+
 import 'package:html/dom.dart';
+import 'package:html/parser.dart' show parse;
+import 'package:http/http.dart' as http;
 
 const URL_PREFIX = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
 
@@ -82,8 +83,14 @@ class TalentBuild {
 
 class FetchTalentBuildException implements Exception {
   final String cause;
+  final String details;
 
-  FetchTalentBuildException(this.cause);
+  FetchTalentBuildException(this.cause, this.details);
+
+  @override
+  String toString() {
+    return 'FetchTalentBuildException{cause: $cause, details: $details}';
+  }
 }
 
 class MissingTalentInBuildError implements Exception {}
@@ -93,7 +100,8 @@ Future<String> getInitialViewstate(String url) async {
 
   final match = VIEWSTATE_RE.firstMatch(response.body);
   if (match == null) {
-    throw FetchTalentBuildException("Unable to find VIEWSTATE in inital page");
+    throw FetchTalentBuildException(
+        "Unable to find VIEWSTATE in inital page", response.body);
   }
 
   return match.group(1);
@@ -108,7 +116,7 @@ Future<String> getPopularTalentsGridHtml(String url, String viewstate) async {
   final match = POPULAR_TALENT_GRID_RE.firstMatch(response.body);
   if (match == null) {
     throw FetchTalentBuildException(
-        "Unable to find talent grid in ajax response");
+        "Unable to find talent grid in ajax response", response.body);
   }
   return match.group(1);
 }
@@ -116,7 +124,11 @@ Future<String> getPopularTalentsGridHtml(String url, String viewstate) async {
 List<TalentBuild> getBuildsFromHtml(String buildsHtml) {
   final document = parse(buildsHtml);
   // Throw away the first row, it's the header row.
-  final rows = document.getElementsByTagName('tr').sublist(1);
+  var trTags = document.getElementsByTagName('tr');
+  if (trTags.length == 0) {
+    return [];
+  }
+  final rows = trTags.sublist(1);
   final builds = <TalentBuild>[];
   for (final row in rows) {
     try {
@@ -132,7 +144,8 @@ TalentBuild parseRow(Element row) {
   // Super hacky, at least for now
   final elements = row.children.where((e) => e is Element).toList();
   if (elements.length != 16) {
-    throw FetchTalentBuildException("Unexpected talent build row contents");
+    throw FetchTalentBuildException(
+        "Unexpected talent build row contents", row.toString());
   }
   final winPercentStr = elements[1].text;
   return TalentBuild(
@@ -155,11 +168,13 @@ Talent parseTalentCell(Element cell) {
   }
 
   if (cell.children.length != 1) {
-    throw FetchTalentBuildException("Unexpected talent cell contents");
+    throw FetchTalentBuildException(
+        "Unexpected talent cell contents", cell.toString());
   }
   final img = cell.children[0];
   if (img.localName != 'img') {
-    throw FetchTalentBuildException('Unexpected talent cell contents');
+    throw FetchTalentBuildException(
+        'Unexpected talent cell contents', cell.toString());
   }
 
   final nameAndDescHtml = img.attributes['title'];
@@ -171,7 +186,7 @@ Talent parseTalentCell(Element cell) {
   final desc = nameAndDescStr.substring(splitIndex + 2);
   final src = img.attributes['src'];
   if (!src.startsWith('//')) {
-    throw FetchTalentBuildException("Unexpected talent image url format");
+    throw FetchTalentBuildException("Unexpected talent image url format", src);
   }
 
   return Talent(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotslogs_mobile_client/hero_details.dart';
+import 'package:hotslogs_mobile_client/hero_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to Flutter',
-      home: HeroDetails("Artanis"),
+      home: HeroList(),
     );
   }
 }

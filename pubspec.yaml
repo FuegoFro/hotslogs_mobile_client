@@ -62,3 +62,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+  fonts:
+    - family: heroes-icon
+      fonts:
+        - asset: fonts/heroes.ttf

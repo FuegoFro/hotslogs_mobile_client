@@ -108,7 +108,7 @@ Future<String> getInitialViewstate(String url) async {
 }
 
 Future<String> getPopularTalentsGridHtml(String url, String viewstate) async {
-  final dataWithViewstate = Map.from(DATA);
+  final dataWithViewstate = Map.from<String, String>(DATA);
   dataWithViewstate["__VIEWSTATE"] = viewstate;
   final response =
       await http.post(url, headers: HEADERS, body: dataWithViewstate);

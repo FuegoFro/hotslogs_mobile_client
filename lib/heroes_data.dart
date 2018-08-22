@@ -44,12 +44,12 @@ const _SELECTED_COLORS_BY_UNIVERSE = {
 
 const _UNSELECTED_COLOR = Color.fromARGB(255, 118, 106, 165);
 
-getHeroRoleIcon(HeroRole role, bool isSelected) => Icon(
+Icon getHeroRoleIcon(HeroRole role, bool isSelected) => Icon(
       IconData(_CODE_POINTS_BY_ROLE[role], fontFamily: 'heroes-icon'),
       color: isSelected ? _SELECTED_COLORS_BY_ROLE[role] : _UNSELECTED_COLOR,
     );
 
-getHeroUniverseIcon(HeroUniverse universe, bool isSelected) => Icon(
+Icon getHeroUniverseIcon(HeroUniverse universe, bool isSelected) => Icon(
       IconData(_CODE_POINTS_BY_UNIVERSE[universe], fontFamily: 'heroes-icon'),
       color: isSelected
           ? _SELECTED_COLORS_BY_UNIVERSE[universe]

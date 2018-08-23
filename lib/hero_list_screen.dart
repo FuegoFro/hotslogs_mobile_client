@@ -31,7 +31,7 @@ class HeroListState extends State<HeroList> {
   }
 
   ListView _buildHeroListView(BuildContext context) => ListView.builder(
-        itemBuilder: listBuilderWithDividers((context, index) =>
+        itemBuilder: itemBuilderWithDividers((context, index) =>
             _buildHeroTile(context, _selectedHeroes[index])),
       );
 

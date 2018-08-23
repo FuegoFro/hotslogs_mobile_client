@@ -33,47 +33,53 @@ class HeroListState extends State<HeroList> {
   ListView _buildHeroListView(BuildContext context) => ListView.builder(
         itemBuilder: itemBuilderWithDividers((context, index) =>
             _buildHeroTile(context, _selectedHeroes[index])),
+        itemCount: itemCountWithDividers(_selectedHeroes.length),
       );
 
-  Widget _buildHeroFilter() {
-    return Column(
-      children: <Widget>[
-        // Role filters
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: HeroRole.values
-              .map((role) => IconButton(
-                    icon: getHeroRoleIcon(role, _selectedRolls.contains(role)),
-                    onPressed: () {
-                      setState(() {
-                        _toggleInSet(_selectedRolls, role);
-                        _updateSelectedHeroes();
-                      });
-                    },
-                  ))
-              .toList(),
+  Widget _buildHeroFilter() => Container(
+        color: Colors.black45,
+        child: Column(
+          children: <Widget>[
+            VertSpace(),
+            // Role filters
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: HeroRole.values
+                  .map((role) => IconButton(
+                        iconSize: 36.0,
+                        icon: getHeroRoleIcon(
+                            role, _selectedRolls.contains(role)),
+                        onPressed: () {
+                          setState(() {
+                            _toggleInSet(_selectedRolls, role);
+                            _updateSelectedHeroes();
+                          });
+                        },
+                      ))
+                  .toList(),
+            ),
+            Divider(),
+            // Universe filters
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: HeroUniverse.values
+                  .map((universe) => IconButton(
+                        iconSize: 36.0,
+                        icon: getHeroUniverseIcon(
+                            universe, _selectedUniverses.contains(universe)),
+                        onPressed: () {
+                          setState(() {
+                            _toggleInSet(_selectedUniverses, universe);
+                            _updateSelectedHeroes();
+                          });
+                        },
+                      ))
+                  .toList(),
+            ),
+            VertSpace(),
+          ],
         ),
-        Divider(),
-        // Universe filters
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: HeroUniverse.values
-              .map((universe) => IconButton(
-                    icon: getHeroUniverseIcon(
-                        universe, _selectedUniverses.contains(universe)),
-                    onPressed: () {
-                      setState(() {
-                        _toggleInSet(_selectedUniverses, universe);
-                        _updateSelectedHeroes();
-                      });
-                    },
-                  ))
-              .toList(),
-        ),
-        Divider(),
-      ],
-    );
-  }
+      );
 
   Widget _buildHeroTile(BuildContext context, HeroInfo hero) => ListTile(
         title: Text(hero.name),

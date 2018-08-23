@@ -4,7 +4,7 @@ IndexedWidgetBuilder itemBuilderWithDividers(
     IndexedWidgetBuilder underlyingBuilder,
     {Widget divider: null}) {
   if (divider == null) {
-    divider = Divider();
+    divider = Divider(height: 1.0);
   }
   return (BuildContext context, int index) {
     if (index.isOdd) {

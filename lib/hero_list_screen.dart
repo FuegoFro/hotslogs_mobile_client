@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hotslogs_mobile_client/hero_details_screen.dart';
 import 'package:hotslogs_mobile_client/heroes_data.dart';
@@ -29,12 +30,6 @@ class HeroListState extends State<HeroList> {
       ),
     );
   }
-
-  ListView _buildHeroListView(BuildContext context) => ListView.builder(
-        itemBuilder: itemBuilderWithDividers((context, index) =>
-            _buildHeroTile(context, _selectedHeroes[index])),
-        itemCount: itemCountWithDividers(_selectedHeroes.length),
-      );
 
   Widget _buildHeroFilter() => Container(
         color: Colors.black45,
@@ -81,12 +76,37 @@ class HeroListState extends State<HeroList> {
         ),
       );
 
-  Widget _buildHeroTile(BuildContext context, HeroInfo hero) => ListTile(
-        title: Text(hero.name),
-        onTap: () {
-          _tappedHeroDetails(context, hero.name);
-        },
+  Widget _buildHeroListView(BuildContext context) => GridView.builder(
+        gridDelegate:
+            SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100.0),
+        itemBuilder: (BuildContext context, int index) =>
+            _buildHeroTile(context, _selectedHeroes[index]),
+        itemCount: _selectedHeroes.length,
       );
+
+  Widget _buildHeroTile(BuildContext context, HeroInfo hero) {
+    assert(debugCheckHasMaterial(context));
+    return GridTile(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Material(
+          shape: CircleBorder(
+            side: BorderSide(color: Theme.of(context).dividerColor, width: 2.0),
+          ),
+          color: Colors.transparent,
+          child: Ink.image(
+            fit: BoxFit.cover,
+            image: CachedNetworkImageProvider(_heroImageUrl(hero)),
+            child: InkWell(
+              onTap: () {
+                _tappedHeroDetails(context, hero.name);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _tappedHeroDetails(BuildContext context, String heroName) {
     Navigator.of(context).push(
@@ -113,5 +133,16 @@ class HeroListState extends State<HeroList> {
     setState(() {
       _selectedHeroes = HEROES.where(_isHeroSelected).toList();
     });
+  }
+
+  String _heroImageUrl(HeroInfo hero) {
+    // Special case Lucio
+    String sanitizedName;
+    if (hero.name == "Lúcio") {
+      sanitizedName = "lucio";
+    } else {
+      sanitizedName = hero.name.toLowerCase().replaceAll(RegExp("[^a-z]"), "");
+    }
+    return "https://raw.githubusercontent.com/heroespatchnotes/heroes-talents/master/images/heroes/$sanitizedName.png";
   }
 }

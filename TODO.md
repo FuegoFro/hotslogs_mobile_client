@@ -1,0 +1,3 @@
+- Make hero list a grid with images
+- Collect own data, rather than using HotS Logs
+- App name and icon on iOS

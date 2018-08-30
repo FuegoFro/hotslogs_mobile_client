@@ -137,12 +137,7 @@ class HeroListState extends State<HeroList> {
 
   String _heroImageUrl(HeroInfo hero) {
     // Special case Lucio
-    String sanitizedName;
-    if (hero.name == "Lúcio") {
-      sanitizedName = "lucio";
-    } else {
-      sanitizedName = hero.name.toLowerCase().replaceAll(RegExp("[^a-z]"), "");
-    }
-    return "https://raw.githubusercontent.com/heroespatchnotes/heroes-talents/master/images/heroes/$sanitizedName.png";
+    String shortName = heroShortNameFromName(hero.name);
+    return "https://raw.githubusercontent.com/heroespatchnotes/heroes-talents/master/images/heroes/$shortName.png";
   }
 }

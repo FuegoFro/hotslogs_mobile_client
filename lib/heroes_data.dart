@@ -56,6 +56,15 @@ Icon getHeroUniverseIcon(HeroUniverse universe, bool isSelected) => Icon(
           : _UNSELECTED_COLOR,
     );
 
+String heroShortNameFromName(String heroName) {
+  // Special case Lucio
+  if (heroName == "Lúcio") {
+    return "lucio";
+  }
+
+  return heroName.toLowerCase().replaceAll(RegExp("[^a-z]"), "");
+}
+
 class HeroInfo {
   final String name;
   final List<HeroRole> roles;

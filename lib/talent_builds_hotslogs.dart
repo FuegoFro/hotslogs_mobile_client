@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:hotslogs_mobile_client/talent_builds_common.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 
-const URL_PREFIX = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
+const _URL_PREFIX = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
 
-const HEADERS = {
+const _HEADERS = {
   'Pragma': 'no-cache',
   'Origin': 'https://www.hotslogs.com',
   'Accept-Encoding': 'gzip, deflate, br',
@@ -22,83 +23,25 @@ const HEADERS = {
   'X-MicrosoftAjax': 'Delta=true',
 };
 
-const DATA = {
+const _DATA = {
   'ctl00\$ctl31': 'ctl00\$ctl31|ctl00\$MainContent\$ComboBoxReplayDateTime',
   'ctl00_MainContent_ComboBoxReplayDateTime_ClientState':
       '{"logEntries":[],"value":"","text":"5 items checked","enabled":true,"checkedIndices":['
       '0,1,2,3,4],"checkedItemsTextOverflows":true}',
 };
 
-final POPULAR_TALENT_GRID_RE = RegExp(
+final _POPULAR_TALENT_GRID_RE = RegExp(
     "updatePanel\\|ctl00_MainContent_ctl00_MainContent_RadGridPopularTalentBuildsPanel\\|([^|]+)\\|");
 
-final VIEWSTATE_RE = RegExp(
+final _VIEWSTATE_RE = RegExp(
     r'<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="([^"]+)"');
-
-class Talent {
-  final String name;
-  final String description;
-  final String imageUrl;
-
-  Talent(this.name, this.description, this.imageUrl);
-
-  @override
-  String toString() {
-    return 'Talent{name: $name, description: $description, imageUrl: $imageUrl}';
-  }
-}
-
-class TalentBuild {
-  final int gameCount;
-  final double winPercent;
-  final Talent tier1;
-  final Talent tier2;
-  final Talent tier3;
-  final Talent tier4;
-  final Talent tier5;
-  final Talent tier6;
-
-  // For some reason they don't ever include this data in HotS Logs
-  // final Talent tier7;
-
-  TalentBuild(this.gameCount, this.winPercent, this.tier1, this.tier2,
-      this.tier3, this.tier4, this.tier5, this.tier6);
-
-  @override
-  String toString() {
-    return 'TalentBuild{gameCount: $gameCount, winPercent: $winPercent, tier1: $tier1, tier2: $tier2, tier3: $tier3, tier4: $tier4, tier5: $tier5, tier6: $tier6}';
-  }
-
-  Iterable<Talent> iterTalents() sync* {
-    yield tier1;
-    yield tier2;
-    yield tier3;
-    yield tier4;
-    yield tier5;
-    yield tier6;
-  }
-
-  Iterable<T> mapTalents<T>(T f(Talent t)) => iterTalents().map(f);
-}
-
-class FetchTalentBuildException implements Exception {
-  final String cause;
-  final String details;
-
-  FetchTalentBuildException(this.cause, this.details);
-
-  @override
-  String toString() {
-    return 'FetchTalentBuildException{cause: $cause, details: $details}';
-  }
-}
 
 class MissingTalentInBuildError implements Exception {}
 
-Future<String> getInitialViewstate(String url) async {
+Future<String> _getInitialViewstate(String url) async {
   final response = await http.get(url);
 
-  final match = VIEWSTATE_RE.firstMatch(response.body);
+  final match = _VIEWSTATE_RE.firstMatch(response.body);
   if (match == null) {
     throw FetchTalentBuildException(
         "Unable to find VIEWSTATE in inital page", response.body);
@@ -107,13 +50,13 @@ Future<String> getInitialViewstate(String url) async {
   return match.group(1);
 }
 
-Future<String> getPopularTalentsGridHtml(String url, String viewstate) async {
-  final dataWithViewstate = Map.from<String, String>(DATA);
+Future<String> _getPopularTalentsGridHtml(String url, String viewstate) async {
+  final dataWithViewstate = Map.from<String, String>(_DATA);
   dataWithViewstate["__VIEWSTATE"] = viewstate;
   final response =
-      await http.post(url, headers: HEADERS, body: dataWithViewstate);
+      await http.post(url, headers: _HEADERS, body: dataWithViewstate);
 
-  final match = POPULAR_TALENT_GRID_RE.firstMatch(response.body);
+  final match = _POPULAR_TALENT_GRID_RE.firstMatch(response.body);
   if (match == null) {
     throw FetchTalentBuildException(
         "Unable to find talent grid in ajax response", response.body);
@@ -121,7 +64,7 @@ Future<String> getPopularTalentsGridHtml(String url, String viewstate) async {
   return match.group(1);
 }
 
-List<TalentBuild> getBuildsFromHtml(String buildsHtml) {
+List<TalentBuild> _getBuildsFromHtml(String buildsHtml) {
   final document = parse(buildsHtml);
   // Throw away the first row, it's the header row.
   var trTags = document.getElementsByTagName('tr');
@@ -132,7 +75,7 @@ List<TalentBuild> getBuildsFromHtml(String buildsHtml) {
   final builds = <TalentBuild>[];
   for (final row in rows) {
     try {
-      builds.add(parseRow(row));
+      builds.add(_parseRow(row));
     } on MissingTalentInBuildError {
       // Ignore this row.
     }
@@ -140,7 +83,7 @@ List<TalentBuild> getBuildsFromHtml(String buildsHtml) {
   return builds;
 }
 
-TalentBuild parseRow(Element row) {
+TalentBuild _parseRow(Element row) {
   // Super hacky, at least for now
   final elements = row.children.where((e) => e is Element).toList();
   if (elements.length != 16) {
@@ -151,16 +94,17 @@ TalentBuild parseRow(Element row) {
   return TalentBuild(
     int.parse(elements[0].text.replaceAll(",", "")),
     double.parse(winPercentStr.substring(0, winPercentStr.length - 2)),
-    parseTalentCell(elements[2]),
-    parseTalentCell(elements[3]),
-    parseTalentCell(elements[4]),
-    parseTalentCell(elements[5]),
-    parseTalentCell(elements[6]),
-    parseTalentCell(elements[7]),
+    _parseTalentCell(elements[2]),
+    _parseTalentCell(elements[3]),
+    _parseTalentCell(elements[4]),
+    _parseTalentCell(elements[5]),
+    _parseTalentCell(elements[6]),
+    _parseTalentCell(elements[7]),
+    null,
   );
 }
 
-Talent parseTalentCell(Element cell) {
+Talent _parseTalentCell(Element cell) {
   if (cell.children.length == 0) {
     // Some talent builds just are missing talents for a tier. Dunno why, but
     // those builds aren't useful.
@@ -196,9 +140,9 @@ Talent parseTalentCell(Element cell) {
   );
 }
 
-Future<List<TalentBuild>> getBuildsForHero(String heroName) async {
-  final url = URL_PREFIX + heroName;
-  final viewstate = await getInitialViewstate(url);
-  final buildsHtml = await getPopularTalentsGridHtml(url, viewstate);
-  return getBuildsFromHtml(buildsHtml);
+Future<List<TalentBuild>> getBuildsForHeroFromHotslogs(String heroName) async {
+  final url = _URL_PREFIX + heroName;
+  final viewstate = await _getInitialViewstate(url);
+  final buildsHtml = await _getPopularTalentsGridHtml(url, viewstate);
+  return _getBuildsFromHtml(buildsHtml);
 }

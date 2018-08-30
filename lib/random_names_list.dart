@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:hotslogs_mobile_client/saved_words.dart';
-import 'package:hotslogs_mobile_client/talent_builds.dart';
+import 'package:hotslogs_mobile_client/talent_builds_hotslogs.dart';
 
 
 final biggerFont = const TextStyle(fontSize: 18.0);
@@ -18,7 +18,7 @@ class RandomWordsState extends State<RandomWords> {
         actions: <Widget>[
           IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
           IconButton(icon: Icon(Icons.file_download), onPressed: () {
-            getBuildsForHero("Malthael").then((value) {
+            getBuildsForHeroFromHotslogs("Malthael").then((value) {
               print("Got a value!");
               print(value);
             });

@@ -1,0 +1,3 @@
+# Ignore these because the data in there is too big. Plus we're hopefully going to migrate to a sql database, rather than JSON hacks.
+/raw/
+/rollups/

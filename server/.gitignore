@@ -1,0 +1,3 @@
+venv
+src/.mypy_cache
+src/__pycache__/

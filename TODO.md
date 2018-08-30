@@ -1,1 +1,2 @@
-- Collect own data, rather than using HotS Logs
+- Use hero/talent data and images from heroes-talents
+- Figure out why image caching isn't working

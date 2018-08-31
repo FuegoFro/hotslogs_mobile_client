@@ -48,7 +48,6 @@
                 "sha256:dd1e6bf7e98e6924849886bf7451e09cfc4f9a1e77ecf64fe79714140fff2f02",
                 "sha256:ffbe95a119f3f3d234edd8c2727ac7e12fdf819dff26778034cedb6ada3fde06"
             ],
-            "index": "pypi",
             "version": "==0.0.12"
         },
         "flask": {
@@ -56,7 +55,6 @@
                 "sha256:2271c0070dbcb5275fad4a82e29f23ab92682dc45f9dfbc22c02ba9b9322ce48",
                 "sha256:a080b744b7e345ccfcbc77954861cb05b3c63786e93f2b3875e0913d44b43f05"
             ],
-            "index": "pypi",
             "version": "==1.0.2"
         },
         "gunicorn": {
@@ -64,7 +62,6 @@
                 "sha256:aa8e0b40b4157b36a5df5e599f45c9c76d6af43845ba3b3b0efe2c70473c2471",
                 "sha256:fa2662097c66f920f53f70621c6c58ca4a3c4d3434205e608e121b5b3b71f4f3"
             ],
-            "index": "pypi",
             "version": "==19.9.0"
         },
         "idna": {
@@ -152,7 +149,6 @@
                 "sha256:e2409ef9d37804dfb566f39c962e6ed70f281ff516b8131b3e6b4e6442711ff1",
                 "sha256:f8b653b0f89938ba72e92ab080c2f3aa24c1b72e2f61add22880cd1b9a6e3cdd"
             ],
-            "index": "pypi",
             "version": "==2.2.3"
         },
         "numpy": {
@@ -215,7 +211,6 @@
                 "sha256:63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1",
                 "sha256:ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"
             ],
-            "index": "pypi",
             "version": "==2.19.1"
         },
         "scipy": {
@@ -249,7 +244,6 @@
                 "sha256:f0521af1b722265d824d6ad055acfe9bd3341765735c44b5a4d0069e189a0f40",
                 "sha256:f25c281f12c0da726c6ed00535ca5d1622ec755c30a3f8eafef26cf43fede694"
             ],
-            "index": "pypi",
             "version": "==1.1.0"
         },
         "six": {

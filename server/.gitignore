@@ -1,3 +1,2 @@
-venv
-src/.mypy_cache
-src/__pycache__/
+/src/.mypy_cache
+/src/__pycache__/

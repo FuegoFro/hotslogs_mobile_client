@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+dataclasses-json = '*'
+requests = '*'
+scipy = '*'
+flask = '*'
+matplotlib = '*'
+gunicorn = "*"
+
+[requires]
+python_version = "3.7"

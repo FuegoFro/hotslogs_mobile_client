@@ -1,0 +1,1 @@
+web: cd server/src && gunicorn serve_top_builds:app

@@ -6,8 +6,7 @@ import 'package:hotslogs_mobile_client/heroes_data.dart';
 import 'package:hotslogs_mobile_client/talent_builds_common.dart';
 import 'package:http/http.dart' as http;
 
-// TODO - Replace this with the real URL once the server is up and running
-final _URL_PREFIX = "http://10.0.2.2:5000/top_builds/";
+final _URL_PREFIX = "http://heroes-stats.herokuapp.com/top_builds/";
 
 String _talent_url(String talentIconName) => "https://raw.githubusercontent.com/heroespatchnotes/heroes-talents/master/images/talents/${talentIconName}";
 
